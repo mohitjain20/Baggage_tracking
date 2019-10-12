@@ -1,5 +1,3 @@
-
-
 #include <ESP8266WiFi.h>
 #include<FirebaseArduino.h>
  #include <SPI.h>
@@ -10,6 +8,7 @@
 //#define WIFI_SSID "xxxxxxx"                                           
 //#define WIFI_PASSWORD "xxxxxxx"   
 
+unsigned long t;
   
 #define FIREBASE_HOST "prototype-b694d.firebaseio.com"
 #define FIREBASE_AUTH "p3bG6vIoBiPwGfe9UL1dgW844HNZa8YpbCAh1Oeg"
@@ -68,7 +67,7 @@ void loop() {
   //Show UID on serial monitor
   Serial.println();
   Serial.print(" UID tag :");
-  String content= "";
+  String content= "ID: ";
   byte letter;
   for (byte i = 0; i < mfrc522.uid.size; i++) 
   {
@@ -77,6 +76,9 @@ void loop() {
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
+  t = millis();
+  content.concat(" Time: ");
+  content.concat(String(t));
   if (Firebase.failed())
   { delay(500);
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
@@ -87,24 +89,16 @@ void loop() {
   
  else { 
     Serial.println("Everything is ready!");
-    delay(300); Serial.println("Everything is ready!");
     delay(300); Serial.println("Everything is ready! \n \n \n");
     delay(300);
 
   
-    Firebase.pushString("/uid",content.substring(1));
+    Firebase.pushString("/P1",content.substring(1));
     Serial.println(content.substring(1));
-    delay(300); Serial.println("uploaded val to firebase \n \n \n");
-
       /*Firebase.setInt("/test/val3",val3);
    Serial.println(val3);
     delay(300); Serial.println("uploaded val3 to firebase \n \n \n");
   */
 
-  val++; val3++;
- }
-
-
-
-  
+ } 
 }
