@@ -1,3 +1,5 @@
+//P1
+
 #include <ESP8266WiFi.h>
 #include<FirebaseArduino.h>
  #include <SPI.h>
@@ -77,7 +79,7 @@ void loop() {
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
 
-  for (byte i = 0; i < mfrc522.uid.size; i++) 
+  for (byte i = 0; i < 12 ; i++) 
   {
      if(content[i]!=' ')
       id.concat(content[i]);
@@ -95,13 +97,14 @@ void loop() {
   }
   
  else { 
-    delay(300); Serial.println("Everything is ready! \n \n \n");
-    delay(300);
-
-  
+    
+  String s;
+  s.concat("P1 ");
+  s.concat("Time: ");
+  s.concat(String(t));
     Firebase.pushString("/P1",content.substring(1));
     Serial.println(content.substring(1));
-    Firebase.pushString(String(id),String(t));
+    Firebase.pushString(String(id),s);
       /*Firebase.setInt("/test/val3",val3);
    Serial.println(val3);
     delay(300); Serial.println("uploaded val3 to firebase \n \n \n");
