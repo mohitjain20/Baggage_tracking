@@ -22,7 +22,6 @@ unsigned long t;
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 int statuss = 0;
 int out = 0;
-int val=0, val3=1000;
 
 void setup() {
 
@@ -67,7 +66,8 @@ void loop() {
   //Show UID on serial monitor
   Serial.println();
   Serial.print(" UID tag :");
-  String content= "ID: ";
+  String content= "";
+  String id = "/";
   byte letter;
   for (byte i = 0; i < mfrc522.uid.size; i++) 
   {
@@ -76,6 +76,13 @@ void loop() {
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
+
+  for (byte i = 0; i < mfrc522.uid.size; i++) 
+  {
+     if(content[i]!=' ')
+      id.concat(content[i]);
+  }
+  
   t = millis();
   content.concat(" Time: ");
   content.concat(String(t));
@@ -88,13 +95,13 @@ void loop() {
   }
   
  else { 
-    Serial.println("Everything is ready!");
     delay(300); Serial.println("Everything is ready! \n \n \n");
     delay(300);
 
   
     Firebase.pushString("/P1",content.substring(1));
     Serial.println(content.substring(1));
+    Firebase.pushString(String(id),String(t));
       /*Firebase.setInt("/test/val3",val3);
    Serial.println(val3);
     delay(300); Serial.println("uploaded val3 to firebase \n \n \n");
